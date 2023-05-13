@@ -66,4 +66,90 @@
 	</canvas>
 	<script  src="canvas.js"></script>
 </body>
+	
+
+    <script type="text/javascript">   
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
+        background: 'rgba(255, 255, 255, 0)',
+        penColor: 'rgb(0, 0, 0)'
+        });
+        var saveButton = document.getElementById('save');
+        var cancelButton = document.getElementById('clear');
+        cancelButton.addEventListener('click', function (event) {
+        signaturePad.clear();
+        let canvas = document.getElementById("signature-pad");
+        const backgroundImage = new Image();
+        backgroundImage.src = "https://res.cloudinary.com/dkw9qeb5y/image/upload/v1679490717/BBClearance_sdqlg8.png";
+        
+          backgroundImage.addEventListener("load", () => {
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+          });
+        }); 
+
+        var EA = document.getElementById('EA');
+        EA.addEventListener('click', function (event) {
+        signaturePad.clear();
+        let canvas = document.getElementById("signature-pad");
+        const backgroundImage = new Image();
+        backgroundImage.src = "https://res.cloudinary.com/dkw9qeb5y/image/upload/v1683945445/ea_hrkj3z.png";
+        
+          backgroundImage.addEventListener("load", () => {
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+          });
+        }); 
+        
+        var ABSA = document.getElementById('ABSA');
+        ABSA.addEventListener('click', function (event) {
+        signaturePad.clear();
+        let canvas = document.getElementById("signature-pad");
+        const backgroundImage = new Image();
+        backgroundImage.src = "https://res.cloudinary.com/dkw9qeb5y/image/upload/v1683945441/absa_gcbedy.png";
+        
+          backgroundImage.addEventListener("load", () => {
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+          });
+        }); 
+
+        
+        saveButton.addEventListener('click', function (el) {
+                // Get the HTML body and canvas elements
+          const body = document.querySelector("body");
+          const canvas = document.querySelector("canvas"); 
+          // Create a new jsPDF instance
+          const doc = new jsPDF(); 
+          // Add the HTML body as an image to the PDF
+          const imgData = canvas.toDataURL("image/png");
+          doc.addImage(imgData, "PNG", 10, 10, 180, 250); 
+          // Save the PDF
+          doc.save("download.pdf");
+            link.click();
+            link.delete;
+        }); 
+
+        var element = $("#imageDIV"); // global variable
+            var getCanvas; // global variable
+            $('document').ready(function(){
+            html2canvas(element, {
+                onrendered: function (canvas) {
+                $("#previewImage").append(canvas);
+                getCanvas = canvas;
+                  }
+               });
+            });
+
+            $("#saveButton").on('click', function () {
+              
+            var imgageData = getCanvas.toDataURL("image/png");
+            // Now browser starts downloading it instead of just showing it
+            var newData = imageData.replace(/^data:image\/png/, "data:application/octet-stream");
+            $("#download").attr("download", "image.png").attr("href", newData);
+            });
+  
+</script>
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js"></script>
+
 </html>
