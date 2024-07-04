@@ -19,8 +19,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  width:800px;
-  height:900px;
+  width:100%;
+  height:100%;
 }
 
     /* EOS */
@@ -74,45 +74,7 @@
         background: 'rgba(255, 255, 255, 0)',
         penColor: 'rgb(0, 0, 0)'
         });
-        var saveButton = document.getElementById('save');
-        var cancelButton = document.getElementById('clear');
-        cancelButton.addEventListener('click', function (event) {
-        signaturePad.clear();
-        let canvas = document.getElementById("signature-pad");
-        const backgroundImage = new Image();
-        backgroundImage.src = "https://res.cloudinary.com/dkw9qeb5y/image/upload/v1679490717/BBClearance_sdqlg8.png";
-        
-          backgroundImage.addEventListener("load", () => {
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-          });
-        }); 
-
-        var EA = document.getElementById('EA');
-        EA.addEventListener('click', function (event) {
-        signaturePad.clear();
-        let canvas = document.getElementById("signature-pad");
-        const backgroundImage = new Image();
-        backgroundImage.src = "https://res.cloudinary.com/dkw9qeb5y/image/upload/v1683945445/ea_hrkj3z.png";
-        
-          backgroundImage.addEventListener("load", () => {
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-          });
-        }); 
-        
-        var ABSA = document.getElementById('ABSA');
-        ABSA.addEventListener('click', function (event) {
-        signaturePad.clear();
-        let canvas = document.getElementById("signature-pad");
-        const backgroundImage = new Image();
-        backgroundImage.src = "https://res.cloudinary.com/dkw9qeb5y/image/upload/v1683945441/absa_gcbedy.png";
-        
-          backgroundImage.addEventListener("load", () => {
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-          });
-        }); 
+  
 
         
         saveButton.addEventListener('click', function (el) {
