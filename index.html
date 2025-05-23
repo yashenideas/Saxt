@@ -1,118 +1,1617 @@
 <!DOCTYPE html>
 <html lang="en">
-	      <script type="text/javascript"  >
-        !function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.SignaturePad=e()}(this,function(){"use strict";var t=function(){function t(t,e,o){this.x=t,this.y=e,this.time=o||Date.now()}return t.prototype.distanceTo=function(t){return Math.sqrt(Math.pow(this.x-t.x,2)+Math.pow(this.y-t.y,2))},t.prototype.equals=function(t){return this.x===t.x&&this.y===t.y&&this.time===t.time},t.prototype.velocityFrom=function(t){return this.time!==t.time?this.distanceTo(t)/(this.time-t.time):0},t}(),e=function(){function e(t,e,o,n,i,s){this.startPoint=t,this.control2=e,this.control1=o,this.endPoint=n,this.startWidth=i,this.endWidth=s}return e.fromPoints=function(t,o){var n=this.calculateControlPoints(t[0],t[1],t[2]).c2,i=this.calculateControlPoints(t[1],t[2],t[3]).c1;return new e(t[1],n,i,t[2],o.start,o.end)},e.calculateControlPoints=function(e,o,n){var i=e.x-o.x,s=e.y-o.y,r=o.x-n.x,h=o.y-n.y,a=(e.x+o.x)/2,c=(e.y+o.y)/2,u=(o.x+n.x)/2,d=(o.y+n.y)/2,l=Math.sqrt(i*i+s*s),v=Math.sqrt(r*r+h*h),p=v/(l+v),f=u+(a-u)*p,_=d+(c-d)*p,m=o.x-f,y=o.y-_;return{c1:new t(a+m,c+y),c2:new t(u+m,d+y)}},e.prototype.length=function(){for(var t,e,o=0,n=0;n<=10;n+=1){var i=n/10,s=this.point(i,this.startPoint.x,this.control1.x,this.control2.x,this.endPoint.x),r=this.point(i,this.startPoint.y,this.control1.y,this.control2.y,this.endPoint.y);if(n>0){var h=s-t,a=r-e;o+=Math.sqrt(h*h+a*a)}t=s,e=r}return o},e.prototype.point=function(t,e,o,n,i){return e*(1-t)*(1-t)*(1-t)+3*o*(1-t)*(1-t)*t+3*n*(1-t)*t*t+i*t*t*t},e}();return function(){function o(t,e){void 0===e&&(e={});var n=this;this.canvas=t,this.options=e,this._handleMouseDown=function(t){1===t.which&&(n._mouseButtonDown=!0,n._strokeBegin(t))},this._handleMouseMove=function(t){n._mouseButtonDown&&n._strokeMoveUpdate(t)},this._handleMouseUp=function(t){1===t.which&&n._mouseButtonDown&&(n._mouseButtonDown=!1,n._strokeEnd(t))},this._handleTouchStart=function(t){if(t.preventDefault(),1===t.targetTouches.length){var e=t.changedTouches[0];n._strokeBegin(e)}},this._handleTouchMove=function(t){t.preventDefault();var e=t.targetTouches[0];n._strokeMoveUpdate(e)},this._handleTouchEnd=function(t){if(t.target===n.canvas){t.preventDefault();var e=t.changedTouches[0];n._strokeEnd(e)}},this.velocityFilterWeight=e.velocityFilterWeight||.7,this.minWidth=e.minWidth||.5,this.maxWidth=e.maxWidth||2.5,this.throttle="throttle"in e?e.throttle:16,this.minDistance="minDistance"in e?e.minDistance:5,this.throttle?this._strokeMoveUpdate=function(t,e){void 0===e&&(e=250);var o,n,i,s=0,r=null,h=function(){s=Date.now(),r=null,o=t.apply(n,i),r||(n=null,i=[])};return function(){for(var a=[],c=0;c<arguments.length;c++)a[c]=arguments[c];var u=Date.now(),d=e-(u-s);return n=this,i=a,d<=0||d>e?(r&&(clearTimeout(r),r=null),s=u,o=t.apply(n,i),r||(n=null,i=[])):r||(r=window.setTimeout(h,d)),o}}(o.prototype._strokeUpdate,this.throttle):this._strokeMoveUpdate=o.prototype._strokeUpdate,this.dotSize=e.dotSize||function(){return(this.minWidth+this.maxWidth)/2},this.penColor=e.penColor||"black",this.backgroundColor=e.backgroundColor||"rgba(0,0,0,0)",this.onBegin=e.onBegin,this.onEnd=e.onEnd,this._ctx=t.getContext("2d"),this.clear(),this.on()}return o.prototype.clear=function(){var t=this._ctx,e=this.canvas;t.fillStyle=this.backgroundColor,t.clearRect(0,0,e.width,e.height),t.fillRect(0,0,e.width,e.height),this._data=[],this._reset(),this._isEmpty=!0},o.prototype.fromDataURL=function(t,e,o){var n=this;void 0===e&&(e={});var i=new Image,s=e.ratio||window.devicePixelRatio||1,r=e.width||this.canvas.width/s,h=e.height||this.canvas.height/s;this._reset(),i.onload=function(){n._ctx.drawImage(i,0,0,r,h),o&&o()},i.onerror=function(t){o&&o(t)},i.src=t,this._isEmpty=!1},o.prototype.toDataURL=function(t,e){switch(void 0===t&&(t="image/png"),t){case"image/svg+xml":return this._toSVG();default:return this.canvas.toDataURL(t,e)}},o.prototype.on=function(){this.canvas.style.touchAction="none",this.canvas.style.msTouchAction="none",window.PointerEvent?this._handlePointerEvents():(this._handleMouseEvents(),"ontouchstart"in window&&this._handleTouchEvents())},o.prototype.off=function(){this.canvas.style.touchAction="auto",this.canvas.style.msTouchAction="auto",this.canvas.removeEventListener("pointerdown",this._handleMouseDown),this.canvas.removeEventListener("pointermove",this._handleMouseMove),document.removeEventListener("pointerup",this._handleMouseUp),this.canvas.removeEventListener("mousedown",this._handleMouseDown),this.canvas.removeEventListener("mousemove",this._handleMouseMove),document.removeEventListener("mouseup",this._handleMouseUp),this.canvas.removeEventListener("touchstart",this._handleTouchStart),this.canvas.removeEventListener("touchmove",this._handleTouchMove),this.canvas.removeEventListener("touchend",this._handleTouchEnd)},o.prototype.isEmpty=function(){return this._isEmpty},o.prototype.fromData=function(t){var e=this;this.clear(),this._fromData(t,function(t){var o=t.color,n=t.curve;return e._drawCurve({color:o,curve:n})},function(t){var o=t.color,n=t.point;return e._drawDot({color:o,point:n})}),this._data=t},o.prototype.toData=function(){return this._data},o.prototype._strokeBegin=function(t){var e={color:this.penColor,points:[]};this._data.push(e),this._reset(),this._strokeUpdate(t),"function"==typeof this.onBegin&&this.onBegin(t)},o.prototype._strokeUpdate=function(t){var e=t.clientX,o=t.clientY,n=this._createPoint(e,o),i=this._data[this._data.length-1],s=i.points,r=s.length>0&&s[s.length-1],h=!!r&&n.distanceTo(r)<=this.minDistance,a=i.color;if(!r||!r||!h){var c=this._addPoint(n);r?c&&this._drawCurve({color:a,curve:c}):this._drawDot({color:a,point:n}),s.push({time:n.time,x:n.x,y:n.y})}},o.prototype._strokeEnd=function(t){this._strokeUpdate(t),"function"==typeof this.onEnd&&this.onEnd(t)},o.prototype._handlePointerEvents=function(){this._mouseButtonDown=!1,this.canvas.addEventListener("pointerdown",this._handleMouseDown),this.canvas.addEventListener("pointermove",this._handleMouseMove),document.addEventListener("pointerup",this._handleMouseUp)},o.prototype._handleMouseEvents=function(){this._mouseButtonDown=!1,this.canvas.addEventListener("mousedown",this._handleMouseDown),this.canvas.addEventListener("mousemove",this._handleMouseMove),document.addEventListener("mouseup",this._handleMouseUp)},o.prototype._handleTouchEvents=function(){this.canvas.addEventListener("touchstart",this._handleTouchStart),this.canvas.addEventListener("touchmove",this._handleTouchMove),this.canvas.addEventListener("touchend",this._handleTouchEnd)},o.prototype._reset=function(){this._lastPoints=[],this._lastVelocity=0,this._lastWidth=(this.minWidth+this.maxWidth)/2,this._ctx.fillStyle=this.penColor},o.prototype._createPoint=function(e,o){var n=this.canvas.getBoundingClientRect();return new t(e-n.left,o-n.top,(new Date).getTime())},o.prototype._addPoint=function(t){var o=this._lastPoints;if(o.push(t),o.length>2){3===o.length&&o.unshift(o[0]);var n=this._calculateCurveWidths(o[1],o[2]),i=e.fromPoints(o,n);return o.shift(),i}return null},o.prototype._calculateCurveWidths=function(t,e){var o=this.velocityFilterWeight*e.velocityFrom(t)+(1-this.velocityFilterWeight)*this._lastVelocity,n=this._strokeWidth(o),i={end:n,start:this._lastWidth};return this._lastVelocity=o,this._lastWidth=n,i},o.prototype._strokeWidth=function(t){return Math.max(this.maxWidth/(t+1),this.minWidth)},o.prototype._drawCurveSegment=function(t,e,o){var n=this._ctx;n.moveTo(t,e),n.arc(t,e,o,0,2*Math.PI,!1),this._isEmpty=!1},o.prototype._drawCurve=function(t){var e=t.color,o=t.curve,n=this._ctx,i=o.endWidth-o.startWidth,s=2*Math.floor(o.length());n.beginPath(),n.fillStyle=e;for(var r=0;r<s;r+=1){var h=r/s,a=h*h,c=a*h,u=1-h,d=u*u,l=d*u,v=l*o.startPoint.x;v+=3*d*h*o.control1.x,v+=3*u*a*o.control2.x,v+=c*o.endPoint.x;var p=l*o.startPoint.y;p+=3*d*h*o.control1.y,p+=3*u*a*o.control2.y,p+=c*o.endPoint.y;var f=o.startWidth+c*i;this._drawCurveSegment(v,p,f)}n.closePath(),n.fill()},o.prototype._drawDot=function(t){var e=t.color,o=t.point,n=this._ctx,i="function"==typeof this.dotSize?this.dotSize():this.dotSize;n.beginPath(),this._drawCurveSegment(o.x,o.y,i),n.closePath(),n.fillStyle=e,n.fill()},o.prototype._fromData=function(e,o,n){for(var i=0,s=e;i<s.length;i++){var r=s[i],h=r.color,a=r.points;if(a.length>1)for(var c=0;c<a.length;c+=1){var u=a[c],d=new t(u.x,u.y,u.time);this.penColor=h,0===c&&this._reset();var l=this._addPoint(d);l&&o({color:h,curve:l})}else this._reset(),n({color:h,point:a[0]})}},o.prototype._toSVG=function(){var t=this,e=this._data,o=Math.max(window.devicePixelRatio||1,1),n=this.canvas.width/o,i=this.canvas.height/o,s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("width",this.canvas.width.toString()),s.setAttribute("height",this.canvas.height.toString()),this._fromData(e,function(t){var e=t.color,o=t.curve,n=document.createElement("path");if(!(isNaN(o.control1.x)||isNaN(o.control1.y)||isNaN(o.control2.x)||isNaN(o.control2.y))){var i="M "+o.startPoint.x.toFixed(3)+","+o.startPoint.y.toFixed(3)+" C "+o.control1.x.toFixed(3)+","+o.control1.y.toFixed(3)+" "+o.control2.x.toFixed(3)+","+o.control2.y.toFixed(3)+" "+o.endPoint.x.toFixed(3)+","+o.endPoint.y.toFixed(3);n.setAttribute("d",i),n.setAttribute("stroke-width",(2.25*o.endWidth).toFixed(3)),n.setAttribute("stroke",e),n.setAttribute("fill","none"),n.setAttribute("stroke-linecap","round"),s.appendChild(n)}},function(e){var o=e.color,n=e.point,i=document.createElement("circle"),r="function"==typeof t.dotSize?t.dotSize():t.dotSize;i.setAttribute("r",r.toString()),i.setAttribute("cx",n.x.toString()),i.setAttribute("cy",n.y.toString()),i.setAttribute("fill",o),s.appendChild(i)});var r='<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 '+n+" "+i+'" width="'+n+'" height="'+i+'">',h=s.innerHTML;if(void 0===h){var a=document.createElement("dummy"),c=s.childNodes;a.innerHTML="";for(var u=0;u<c.length;u+=1)a.appendChild(c[u].cloneNode(!0));h=a.innerHTML}return"data:image/svg+xml;base64,"+btoa(r+h+"</svg>")},o}()});
-      </script> 
-  <style id="compiled-css" type="text/css">
-    .wrapper {
-  position: relative;
-  width: 800px;
-  height:900px;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
- 
-
-.signature-pad {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width:100%;
-  height:100%;
-}
-
-    /* EOS */
-  </style> 
 <head>
-	<meta charset="UTF-8">
-	<title>Yashen Canvas</title>
-	<style type="text/css">
-	body{background:#eee;margin:0;padding:0}
-.example{background:#FFF;width:600px;border:1px #000 solid;margin:20px auto;padding:15px;-moz-border-radius: 3px;-webkit-border-radius: 3px}
-#water {
-    width:500px;
-    height:400px;
-    display: block;
-    margin:0px auto;
-    cursor:pointer;
-}
-#switcher {
-    text-align:center;
-    overflow:hidden;
-    margin:15px;
-}
-#switcher img {
-    width:160px;
-    height:120px;
-}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NPO Image Gallery Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f7ff;
+        }
+        .quantity-input::-webkit-inner-spin-button, 
+        .quantity-input::-webkit-outer-spin-button { 
+            opacity: 1;
+        }
+        .item-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .image-upload-preview {
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            object-fit: cover;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .image-upload-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .mosaic-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .mosaic-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .mosaic-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .mosaic-info {
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+        .mosaic-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .mosaic-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        .pdf-preview {
+            font-family: 'Poppins', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .pdf-preview h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .pdf-preview .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .pdf-preview .header-logo {
+            display: flex;
+            align-items: center;
+        }
+        .pdf-preview .header-logo img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .pdf-preview .info-section {
+            margin-bottom: 20px;
+        }
+        .pdf-preview .info-section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        .pdf-preview table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .pdf-preview table th {
+            background-color: #f8f8f8;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #ddd;
+        }
+        .pdf-preview table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .pdf-preview .totals {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .pdf-preview .totals div {
+            margin-bottom: 5px;
+        }
+        .pdf-preview .total-amount {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .pdf-preview .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .gallery-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .gallery-info {
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+        .gallery-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .gallery-desc {
+            font-size: 14px;
+            color: #666;
+        }
+         .gallery-item-info {
+            padding: 10px;
+        }
+        .gallery-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .gallery-item-desc {
+            font-size: 14px;
+            color: #666;
+        }
+        /* Toast notification styles */
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            max-width: 350px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            padding: 16px;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            align-items: flex-start;
+        }
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+        .toast-icon {
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        .toast-content {
+            flex-grow: 1;
+        }
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .toast-message {
+            font-size: 14px;
+            color: #666;
+        }
+        .toast-close {
+            margin-left: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .toast-warning {
+            border-left: 4px solid #f59e0b;
+        }
+        .toast-error {
+            border-left: 4px solid #ef4444;
+        }
+        .toast-info {
+            border-left: 4px solid #3b82f6;
+        }
+        .toast-success {
+            border-left: 4px solid #10b981;
+        }
+    </style>
 </head>
 <body>
- 
-	  <h1>
-  Fill in Document With Finger
-</h1>
-<div class="wrapper">   
-  <canvas id="signature-pad" class="signature-pad" width=800 height=900></canvas>
-</div>
-<div>
-  <button id="save">Save</button>
-  <button id="clear">New/Clear</button>
-  <button id="EA">EA Clearance</button>
-  <button id="ABSA">ABSA Clearance</button>
-	</div>
-	
- 
- 	
-</body>
-	
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-red-600 text-white py-6 shadow-lg">
+            <div class="container mx-auto px-7">
+                <div class="flex items-center justify-center space-x-4 mb-6">
+                    <img
+                        src="https://res.cloudinary.com/dkw9qeb5y/image/upload/v1747632238/o1v8bwlfau8hltgictny.jpg"
+                        alt="Success icon"
+                        width="80"
+                        height="80"
+                        onerror="this.onerror=null; this.src='images/exhaust.jpg';"
+                        class="rounded-full"
+                    />
+                    <h1 class="text-3xl font-bold text-center">New Order 66</h1>
+                </div>
+            </div>
 
-    <script type="text/javascript">   
-        var signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
-        background: 'rgba(255, 255, 255, 0)',
-        penColor: 'rgb(0, 0, 0)'
+        </header>
+
+        <main class="container mx-auto px-4 py-8 flex-grow">
+            <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
+                <!-- Image Gallery Section -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Overview Report</h3>
+                    <p class="text-gray-600 mb-4">Add between 2-9 images with descriptions that will appear in a mosaic layout in your PDF.</p>
+                    
+                    <div class="mb-4">
+                        <button id="addImageBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200 flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Add Image
+                        </button>
+                        <p class="text-sm text-gray-500 mt-2">You can add between 2-9 images.</p>
+                    </div>
+                    
+                    <div id="imageGalleryList" class="space-y-4">
+                        <!-- Images will be added here -->
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Blockbusters and Parnters. Information</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="galleryTitle" class="block text-sm font-medium text-gray-700 mb-1">Blockbusters and Parnters. Title</label>
+                            <input type="text" id="galleryTitle" placeholder="Enter a title for your gallery" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                        <div>
+                                <label for="galleryDescription" class="block text-sm font-medium text-gray-700 mb-1">Blockbusters and Parnters. Description</label>
+                                    <textarea
+                                        id="galleryDescription"
+                                        rows="3"
+                                        placeholder="Enter a description for your gallery"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                                    ></textarea>
+                        </div>
+                         <div>
+                            <label for="galleryConc" class="block text-sm font-medium text-gray-700 mb-1">Recommendation:</label>
+                            <textarea id="galleryConc" rows="3" placeholder="Enter a description for your gallery" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <p class="text-gray-600">Please select the items you need and specify quantities. You can also add custom items if needed.</p>
+                </div>
+
+                <div class="space-y-4 mb-8" id="itemsList">
+                    <!-- Predefined items will be added here -->
+                </div>
+
+                <div class="mb-6 flex justify-center">
+                    <button id="addPredefinedItem" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition duration-200 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add Predefined Work
+                    </button>
+                </div>
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Add Custom Work</h3>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-center">
+                            <div class="item-image mr-2" id="customItemImagePreview">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <button id="customItemImageBtn" class="text-sm text-red-600 hover:text-red-800 mr-2">Icon</button>
+                            <input type="hidden" id="customItemImageData" value="">
+                        </div>
+                        
+                        <input type="text" id="customItemName" placeholder="Item name" maxlength="30" class="w-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                        
+                        <div class="flex items-center">
+                            <span class="mr-1 text-gray-700">R</span>
+                            <input type="number" id="customItemPrice" min="20" max="10000" value="20" step="0.01" placeholder="Price" class="w-20 px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 quantity-input">
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <button class="px-2 py-1 bg-gray-200 rounded-l-md border border-gray-300" id="decreaseCustomQty">-</button>
+                            <input type="number" id="customItemQuantity" min="1" value="1" class="w-12 px-1 py-1 border-y border-gray-300 text-center focus:outline-none focus:ring-2 focus:ring-red-500 quantity-input">
+                            <button class="px-2 py-1 bg-gray-200 rounded-r-md border border-gray-300" id="increaseCustomQty">+</button>
+                        </div>
+                        
+                        <button id="addCustomItem" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md transition duration-200 flex-shrink-0">Add</button>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Your Contact Information</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Your Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 pt-4 mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-medium">Subtotal:</span>
+                        <span id="subtotal">R 0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-medium">VAT (15%):</span>
+                        <span id="vat">R 0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center text-lg font-bold">
+                        <span>Total:</span>
+                        <span id="total">R 0.00</span>
+                    </div>
+                </div>
+
+     
+
+                <div class="flex justify-center space-x-3">
+                    <button id="previewPDF" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-md font-medium transition duration-200 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        Preview PDF
+                    </button>
+                    <button id="generatePDF" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md font-medium transition duration-200 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Generate & Send Requested Report
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-gray-100 py-4 mt-8">
+            <div class="container mx-auto px-4 text-center text-gray-600">
+                
+                  <p>Thank you for supporting our Proud Plumbers Policies!</p>
+                 <p class="mt-2 italic">© 2020 - 2025 BB&P(PTY).LTD</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast-notification">
+        <div class="toast-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+        </div>
+        <div class="toast-content">
+            <div class="toast-title">Warning</div>
+            <div class="toast-message">This is a notification message.</div>
+        </div>
+        <div class="toast-close">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                    <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Gallery Submitted!</h3>
+                <p class="text-gray-600 mb-6">Your image gallery has been generated and would be sent to our team.</p>
+                <div class="flex justify-center">
+                    <button id="closeModal" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ 
+
+    <!-- Add Gallery Image Modal -->
+    <div id="addGalleryImageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full">
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-medium text-gray-900">Add Gallery Image</h3>
+                <p class="text-gray-600 mt-2">Select an image and add descriptions:</p>
+            </div>
+            
+            <div class="mb-6">
+                <div class="image-upload-preview mb-4" id="galleryImagePreview">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <button id="selectGalleryImage" class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-200 mb-4">
+                    Select Image
+                </button>
+                <input type="hidden" id="galleryImageData">
+                
+                <div class="mb-4">
+                    <label for="galleryImageTitle" class="block text-sm font-medium text-gray-700 mb-1">Where is this image taken?</label>
+                    <!-- Select Dropdown -->
+                    <select id="galleryImageTitleSelect" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="Front of House">Front of House</option>
+                        <option value="Bathroom">Bathroom</option>
+                        <option value="toilet in son bathroom">Toilet in Son's Bathroom</option>
+                        <option value="toilet in daughter bathroom">Toilet in Daughter's Bathroom</option>
+                        <option value="geyser outside">Geyser Outside</option>
+                        <option value="Geyser on roof">Geyser on Roof</option>
+                        <option value="Geyser in Roof">Geyser in Roof</option>
+                        <option value="Leak Detection">Leak Detection</option>
+                        <option value="other">Other...</option>
+                    </select>
+                    <input type="text" id="galleryImageTitleCustom" placeholder="Type your own description" class="w-full mt-2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hidden" />
+                    <input type="text" id="galleryImageTitle" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 hidden" placeholder="Enter a title for this image">
+                </div>
+                
+                <div>
+                    <label for="galleryImageDesc" class="block text-sm font-medium text-gray-700 mb-1">Image Description</label>
+                    <textarea id="galleryImageDesc" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" placeholder="Enter a description for this image"></textarea>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancelGalleryImage" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition duration-200">Cancel</button>
+                <button id="saveGalleryImage" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200">Add Image</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Image Selection Modal -->
+    <div id="galleryImageSelectionModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full">
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-medium text-gray-900">Select an Image</h3>
+                <p class="text-gray-600 mt-2">Choose a sample image for your gallery:</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6" id="galleryImageOptions">
+                <!-- Gallery image options will be added here -->
+            </div>
+            
+            <div class="flex justify-center space-x-3">
+                <button id="cancelGalleryImageSelection" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition duration-200">Cancel</button>
+            </div>
+        </div>
+    </div>
+      <!-- Add Predefined Item Modal -->
+    <div id="addItemModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full">
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-medium text-gray-900">Add Predefined Item</h3>
+                <p class="text-gray-600 mt-2">Select an item from the list below:</p>
+            </div>
+            
+            <div class="space-y-3 mb-6" id="predefinedItemsList">
+                <!-- Predefined items will be added here -->
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="closeItemModal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition duration-200">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Price Modal -->
+    <div id="editPriceModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full">
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-medium text-gray-900">Edit Price</h3>
+                <p class="text-gray-600 mt-2">Update the price for this item:</p>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex items-center justify-center mb-4">
+                    <span class="mr-2 text-gray-700 text-lg">R</span>
+                    <input type="number" id="editPriceInput" min="0" max="10000" step="0.01" class="w-32 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                </div>
+                <input type="hidden" id="editItemId">
+            </div>
+            
+            <div class="flex justify-center space-x-3">
+                <button id="cancelEditPrice" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition duration-200">Cancel</button>
+                <button id="saveEditPrice" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition duration-200">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Preview Modal -->
+    <div id="pdfPreviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden overflow-y-auto">
+        <div class="bg-white rounded-lg p-4 max-w-4xl w-full m-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-medium text-gray-900">PDF Preview</h3>
+                <button id="closePdfPreview" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="overflow-y-auto max-h-[80vh]">
+                <div id="pdfContent" class="pdf-preview">
+                    <!-- PDF content will be generated here -->
+                </div>
+            </div>
+            
+            <div class="flex justify-end mt-6 space-x-3">
+                <button id="downloadPDF" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PDF
+                </button>
+                <button id="dowqnloadPDF" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download PDF
+                </button>
+                <button id="closePdfPreviewBtn" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 transition duration-200">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Wait for the document to be fully loaded
+           
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample gallery images
+                const predefinedItems = [ 
+                { name: "Start Up", price: 973, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' },
+                { name: "Additonal labour ", price: 580, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' },  
+                { name: "Camera inspection", price: 1500, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
+                { name: "Jetting first hour", price: 2950, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>' },
+                { name: "Unblocking with roto machine", price: 1500, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>' },
+                { name: "Drain camera inspection", price: 1500, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>' },
+                // { name: "Excvations between 1m and 2m deep", price: 100, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
+                // { name: "Excvations between 1m deep", price: 30, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
+                // { name: "Filling to trenches, compacted 1m-2m", price: 50, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
+                // { name: "Filling to trenches, compacted 1m", price: 30, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
+                // { name: "110mm pipe SABS laid in ground 1m", price: 235, image: svgIcon },
+                // { name: "110mm pipe SABS laid in ground 1-2m", price: 270, image: svgIcon },
+                // { name: "110mmx45 ie UG Junction RH/LH", price: 188, image: svgIcon },
+                // { name: "110mm single socket UG", price: 32, image: svgIcon },
+                // { name: "110mm x45 UG junction plain", price: 143, image: svgIcon },
+                // { name: "110MM x UG bend", price: 110, image: svgIcon },
+                // { name: "110mmx45 UG rodding eye", price: 90, image: svgIcon },
+                // { name: "110mm PVC to EW adaptor", price: 145, image: svgIcon },
+                // { name: "Plant hire Jack hammer 4 days", price: 3488, image: svgIcon },
+                // { name: "Plant hire Wacker/Rammer 3 days", price: 1965, image: svgIcon },
+                // { name: "Start Up", price: 973, image: svgIcon },
+                // { name: "Additonal labour", price: 580, image: svgIcon }
+            ];  
+            
+            // Available icons for custom items
+            const availableIcons = [
+                { id: 'icon1', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' },
+                { id: 'icon2', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>' },
+                { id: 'icon3', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' },
+                { id: 'icon4', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /></svg>' },
+                { id: 'icon5', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>' },
+                { id: 'icon6', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>' },
+                { id: 'icon7', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>' },
+                { id: 'icon8', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>' },
+                { id: 'icon9', svg: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' }
+            ];
+
+            const galleryImages = [
+                { id: 'gallery1', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiM0Mjg1RjQiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjcwIiBmaWxsPSIjRkZGRkZGIiBmaWxsLW9wYWNpdHk9IjAuOCIvPjxwYXRoIGQ9Ik04MCAxMjBMMTIwIDEyMEwxMDAgODBaIiBmaWxsPSIjNDI4NUY0Ii8+PC9zdmc+', alt: 'Blue mountain landscape' },
+                { id: 'gallery2', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMwRjlENTgiLz48Y2lyY2xlIGN4PSIxNTAiIGN5PSI1MCIgcj0iMzAiIGZpbGw9IiNGRkNDMDAiLz48cGF0aCBkPSJNMCAxNTBMNTAgMTAwTDEwMCAxNTBMMTUwIDgwTDIwMCAxNTBMMjAwIDIwMEwwIDIwMFoiIGZpbGw9IiMzMzMzMzMiLz48L3N2Zz4=', alt: 'Green landscape with sun' },
+                { id: 'gallery3', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFQTQzMzUiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iNDAiIGZpbGw9IiNGRkZGRkYiIGZpbGwtb3BhY2l0eT0iMC44Ii8+PHBhdGggZD0iTTMwIDE2MEw3MCAxMDBMMTEwIDE0MEwxNDAgOTBMMTgwIDE2MEwzMCAxNjBaIiBmaWxsPSIjMzMzMzMzIi8+PC9zdmc+', alt: 'Red sunset landscape' },
+                { id: 'gallery4', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGQUJCMDUiLz48Y2lyY2xlIGN4PSIxNTAiIGN5PSI1MCIgcj0iMzAiIGZpbGw9IiNGRkZGRkYiLz48cGF0aCBkPSJNMCAxMjBMNTAgODBMODAgMTEwTDEzMCA3MEwyMDAgMTQwTDIwMCAyMDBMMCAyMDBaIiBmaWxsPSIjNDI4NUY0Ii8+PC9zdmc+', alt: 'Yellow beach scene' },
+                { id: 'gallery5', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiM5QzI3QjAiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjYwIiByPSIyMCIgZmlsbD0iI0ZGQ0MwMCIvPjxwYXRoIGQ9Ik0wIDE0MEw0MCA5MEw4MCAxMjBMMTQwIDcwTDE4MCAxMTBMMjAwIDkwTDIwMCAyMDBMMCAyMDBaIiBmaWxsPSIjNDI4NUY0Ii8+PC9zdmc+', alt: 'Purple mountain view' },
+                { id: 'gallery6', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMzNDk4REIiLz48Y2lyY2xlIGN4PSIxNTAiIGN5PSI1MCIgcj0iMzAiIGZpbGw9IiNGRkZGRkYiLz48cGF0aCBkPSJNMCAxNTBMNTAgMTIwTDEwMCAxNDBMMTUwIDEwMEwyMDAgMTMwTDIwMCAyMDBMMCAyMDBaIiBmaWxsPSIjMkVDQzcxIi8+PC9zdmc+', alt: 'Blue sky with clouds' },
+                { id: 'gallery7', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFNjdFMjIiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSI3MCIgcj0iNDAiIGZpbGw9IiNGRkNDMDAiLz48cGF0aCBkPSJNMCAxMjBMNTAgOTBMODAgMTEwTDEzMCA3MEwyMDAgMTIwTDIwMCAyMDBMMCAyMDBaIiBmaWxsPSIjMzMzMzMzIi8+PC9zdmc+', alt: 'Orange sunset' },
+                { id: 'gallery8', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMyRUNDNzEiLz48Y2lyY2xlIGN4PSIxNTAiIGN5PSI1MCIgcj0iMzAiIGZpbGw9IiNGRkZGRkYiLz48cGF0aCBkPSJNMCAxNTBMNTAgMTAwTDEwMCAxMzBMMTUwIDgwTDIwMCAxMjBMMjAwIDIwMEwwIDIwMFoiIGZpbGw9IiMzNDk4REIiLz48L3N2Zz4=', alt: 'Green forest' },
+                { id: 'gallery9', src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiM5QzI3QjAiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIzMCIgZmlsbD0iI0ZGQ0MwMCIvPjxwYXRoIGQ9Ik0wIDE1MEw1MCAxMDBMMTAwIDE0MEwxNTAgOTBMMjAwIDE0MEwyMDAgMjAwTDAgMjAwWiIgZmlsbD0iIzMzMzMzMyIvPjwvc3ZnPg==', alt: 'Purple night sky' }
+            ];
+              // Reference to the items list container
+            const itemsListContainer = document.getElementById('itemsList');
+            // Reference to the gallery list container
+            const galleryListContainer = document.getElementById('imageGalleryList');
+                 
+            // Track added items
+            const addedItems = new Set();
+            
+            // Track gallery images
+            const galleryItemsArray = [];
+            
+            // Current selected gallery image
+            let currentGalleryImage = null;
+            // Initialize custom item icon
+
+            let currentCustomIcon = availableIcons[0].svg;
+            document.getElementById('customItemImagePreview').innerHTML = currentCustomIcon;
+            document.getElementById('customItemImageData').value = currentCustomIcon;
+
+            function formatPrice(price) {
+                return 'R ' + parseFloat(price).toFixed(2);
+            }
+
+            // Function to calculate and update totals
+            function updateTotals() {
+                let subtotal = 0;
+                const itemElements = document.querySelectorAll('#itemsList > div');
+                
+                itemElements.forEach(item => {
+                    const priceElement = item.querySelector('.item-price');
+                    const quantityInput = item.querySelector('input[type="number"]');
+                    
+                    if (priceElement && quantityInput) {
+                        const price = parseFloat(priceElement.dataset.price);
+                        const quantity = parseInt(quantityInput.value);
+                        subtotal += price * quantity;
+                    }
+                });
+                
+                const vat = subtotal * 0.15;
+                const total = subtotal + vat;
+                
+                document.getElementById('subtotal').textContent = formatPrice(subtotal);
+                document.getElementById('vat').textContent = formatPrice(vat);
+                document.getElementById('total').textContent = formatPrice(total);
+            }
+            
+            // Toast notification functions
+            function showToast(type, title, message, duration = 5000) {
+                const toast = document.getElementById('toastNotification');
+                const toastTitle = toast.querySelector('.toast-title');
+                const toastMessage = toast.querySelector('.toast-message');
+                const toastIcon = toast.querySelector('.toast-icon svg');
+                
+                // Remove all type classes
+                toast.classList.remove('toast-warning', 'toast-error', 'toast-info', 'toast-success');
+                
+                // Set type class
+                toast.classList.add(`toast-${type}`);
+                
+                // Set icon based on type
+                if (type === 'warning') {
+                    toastIcon.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>`;
+                } else if (type === 'error') {
+                    toastIcon.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>`;
+                } else if (type === 'info') {
+                    toastIcon.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>`;
+                } else if (type === 'success') {
+                    toastIcon.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>`;
+                }
+                
+                // Set content
+                toastTitle.textContent = title;
+                toastMessage.textContent = message;
+                
+                // Show toast
+                toast.classList.add('show');
+                
+                // Auto hide after duration
+                const hideTimeout = setTimeout(() => {
+                    hideToast();
+                }, duration);
+                
+                // Close button functionality
+                const closeButton = toast.querySelector('.toast-close');
+                closeButton.addEventListener('click', () => {
+                    clearTimeout(hideTimeout);
+                    hideToast();
+                });
+            }
+            
+            function hideToast() {
+                const toast = document.getElementById('toastNotification');
+                toast.classList.remove('show');
+            }
+
+            // Function to validate form before preview or submission
+            function validateForm(action) {
+                let isValid = true;
+                let errorMessages = [];
+                
+                // Check if there are at least 2 images
+                if (galleryItemsArray.length < 2) {
+                    isValid = false;
+                    errorMessages.push("Please add at least 2 images to your gallery.");
+                    showToast('warning', 'Not Enough Images', 'Please add at least 2 images to your gallery.');
+                    return false;
+                }
+                
+                // For submission, check if name and email are provided
+                if (action === 'submit') {
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    
+                    if (!name) {
+                        isValid = false;
+                        errorMessages.push("Please provide your name.");
+                        showToast('warning', 'Missing Information', 'Please provide your name.');
+                        return false;
+                    }
+                    
+                    if (!email) {
+                        isValid = false;
+                        errorMessages.push("Please provide your email.");
+                        showToast('warning', 'Missing Information', 'Please provide your email.');
+                        return false;
+                    }
+                }
+                
+                // Check if gallery title is provided
+                const galleryTitle = document.getElementById('galleryTitle').value.trim();
+                if (!galleryTitle) {
+                    showToast('info', 'Missing Title', 'You haven\'t provided a gallery title. A default title will be used.');
+                }
+                
+                return isValid;
+            }
+            const selectEl = document.getElementById('galleryImageTitleSelect');
+            const customInputEl = document.getElementById('galleryImageTitleCustom');
+
+            selectEl.addEventListener('change', function () {
+                if (this.value === 'other') {
+                    customInputEl.classList.remove('hidden');
+                    customInputEl.focus();
+                } else {
+                    customInputEl.classList.add('hidden');
+                }
+            });
+
+            // Optional: When submitting the form or using this value, check:
+            function getSelectedImageTitle() {
+                return selectEl.value === 'other' ? customInputEl.value : selectEl.value;
+            }
+            // Function to add a gallery image to the list
+            function addGalleryImageToList(imageData, title, description) {
+                // Create unique ID for this gallery item
+                const galleryItemId = 'gallery_' + Date.now();
+                
+                // Add to gallery items array
+                galleryItemsArray.push({
+                    id: galleryItemId,
+                    image: imageData,
+                    title: title,
+                    description: description
+                });
+                
+                const galleryItemDiv = document.createElement('div');
+                galleryItemDiv.className = 'flex flex-col sm:flex-row border border-gray-200 rounded-md overflow-hidden';
+                galleryItemDiv.dataset.galleryId = galleryItemId;
+                
+                const imagePreviewDiv = document.createElement('div');
+                imagePreviewDiv.className = 'w-full sm:w-1/3 h-40 sm:h-auto';
+                
+                const imageElement = document.createElement('img');
+                imageElement.src = imageData;
+                imageElement.alt = title;
+                imageElement.className = 'w-full h-full object-cover';
+                
+                imagePreviewDiv.appendChild(imageElement);
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'p-4 flex-1 flex flex-col';
+                
+                const titleElement = document.createElement('h4');
+                titleElement.className = 'text-lg font-medium text-gray-800 mb-2';
+                titleElement.textContent = title;
+                
+                const descElement = document.createElement('p');
+                descElement.className = 'text-gray-600 mb-4 flex-1';
+                descElement.textContent = description;
+                
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'flex justify-end';
+                
+                const removeButton = document.createElement('button');
+                removeButton.className = 'text-red-500 hover:text-red-700 flex items-center';
+                removeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg> Remove';
+                removeButton.addEventListener('click', function() {
+                    galleryListContainer.removeChild(galleryItemDiv);
+                    // Remove from array
+                    const index = galleryItemsArray.findIndex(item => item.id === galleryItemId);
+                    if (index !== -1) {
+                        galleryItemsArray.splice(index, 1);
+                    }
+                    
+                    // Update add image button state
+                    updateAddImageButtonState();
+                });
+                
+                controlsDiv.appendChild(removeButton);
+                
+                contentDiv.appendChild(titleElement);
+                contentDiv.appendChild(descElement);
+                contentDiv.appendChild(controlsDiv);
+                
+                galleryItemDiv.appendChild(imagePreviewDiv);
+                galleryItemDiv.appendChild(contentDiv);
+                
+                galleryListContainer.appendChild(galleryItemDiv);
+                
+                // Update add image button state
+                updateAddImageButtonState();
+                
+                // Show success toast
+                showToast('success', 'Image Added', 'Your image has been added to the gallery.');
+            }
+             // Function to add an item to the list
+            function addItemToList(itemName, price, image, quantity = 1) {
+                // Check if item already exists
+                if (addedItems.has(itemName)) {
+                    // Find the item and increment its quantity
+                    const itemElements = document.querySelectorAll('#itemsList > div');
+                    for (const itemElement of itemElements) {
+                        const nameElement = itemElement.querySelector('.item-name');
+                        if (nameElement && nameElement.textContent === itemName) {
+                            const quantityInput = itemElement.querySelector('input[type="number"]');
+                            if (quantityInput) {
+                                quantityInput.value = parseInt(quantityInput.value) + parseInt(quantity);
+                                updateTotals();
+                            }
+                            return;
+                        }
+                    }
+                }
+                
+                // Add item to tracking set
+                addedItems.add(itemName);
+                
+                // Create unique ID for this item
+                const itemId = 'item_' + Date.now();
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'flex flex-wrap items-center justify-between p-4 border border-gray-200 rounded-md';
+                itemDiv.dataset.itemName = itemName;
+                itemDiv.dataset.itemId = itemId;
+                
+                const itemInfoDiv = document.createElement('div');
+                itemInfoDiv.className = 'flex items-center mb-2 sm:mb-0';
+                
+                const itemImageDiv = document.createElement('div');
+                itemImageDiv.className = 'item-image mr-3 flex-shrink-0';
+                itemImageDiv.innerHTML = image;
+                
+                const itemTextDiv = document.createElement('div');
+                
+                const itemNameSpan = document.createElement('span');
+                itemNameSpan.className = 'text-gray-800 font-medium item-name';
+                itemNameSpan.textContent = itemName;
+                
+                const itemPriceDiv = document.createElement('div');
+                itemPriceDiv.className = 'flex items-center';
+                
+                const itemPriceSpan = document.createElement('span');
+                itemPriceSpan.className = 'text-gray-600 text-sm item-price';
+                itemPriceSpan.textContent = formatPrice(price);
+                itemPriceSpan.dataset.price = price;
+                
+                const editPriceBtn = document.createElement('button');
+                editPriceBtn.className = 'ml-2 text-gray-500 hover:text-red-500';
+                editPriceBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>';
+                editPriceBtn.addEventListener('click', function() {
+                    document.getElementById('editItemId').value = itemId;
+                    document.getElementById('editPriceInput').value = parseFloat(itemPriceSpan.dataset.price);
+                    document.getElementById('editPriceModal').classList.remove('hidden');
+                });
+                
+                itemPriceDiv.appendChild(itemPriceSpan);
+                itemPriceDiv.appendChild(editPriceBtn);
+                
+                itemTextDiv.appendChild(itemNameSpan);
+                itemTextDiv.appendChild(itemPriceDiv);
+                
+                itemInfoDiv.appendChild(itemImageDiv);
+                itemInfoDiv.appendChild(itemTextDiv);
+                
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'flex items-center space-x-3';
+                
+                const quantityLabel = document.createElement('label');
+                quantityLabel.className = 'text-sm text-gray-600';
+                quantityLabel.textContent = 'Qty:';
+                
+                const quantityControlDiv = document.createElement('div');
+                quantityControlDiv.className = 'flex items-center';
+                
+                const decreaseBtn = document.createElement('button');
+                decreaseBtn.className = 'px-2 py-1 bg-gray-200 rounded-l-md border border-gray-300';
+                decreaseBtn.innerHTML = '-';
+                decreaseBtn.addEventListener('click', function() {
+                    if (parseInt(quantityInput.value) > 1) {
+                        quantityInput.value = parseInt(quantityInput.value) - 1;
+                        updateTotals();
+                    }
+                });
+                
+                const quantityInput = document.createElement('input');
+                quantityInput.type = 'number';
+                quantityInput.min = '1';
+                quantityInput.value = quantity;
+                quantityInput.className = 'w-16 px-2 py-1 border-y border-gray-300 text-center focus:outline-none focus:ring-2 focus:ring-red-500 quantity-input';
+                quantityInput.addEventListener('change', updateTotals);
+                
+                const increaseBtn = document.createElement('button');
+                increaseBtn.className = 'px-2 py-1 bg-gray-200 rounded-r-md border border-gray-300';
+                increaseBtn.innerHTML = '+';
+                increaseBtn.addEventListener('click', function() {
+                    quantityInput.value = parseInt(quantityInput.value) + 1;
+                    updateTotals();
+                });
+                
+                quantityControlDiv.appendChild(decreaseBtn);
+                quantityControlDiv.appendChild(quantityInput);
+                quantityControlDiv.appendChild(increaseBtn);
+                
+                // Add remove button for all items
+                const removeButton = document.createElement('button');
+                removeButton.className = 'text-red-500 hover:text-red-700 ml-2';
+                removeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+                removeButton.addEventListener('click', function() {
+                    itemsListContainer.removeChild(itemDiv);
+                    addedItems.delete(itemName);
+                    updateTotals();
+                });
+                
+                controlsDiv.appendChild(quantityLabel);
+                controlsDiv.appendChild(quantityControlDiv);
+                controlsDiv.appendChild(removeButton);
+                
+                itemDiv.appendChild(itemInfoDiv);
+                itemDiv.appendChild(controlsDiv);
+                
+                itemsListContainer.appendChild(itemDiv);
+                updateTotals();
+            }
+               // Add custom item button functionality
+            document.getElementById('addCustomItem').addEventListener('click', function() {
+                const customItemName = document.getElementById('customItemName').value.trim();
+                const customItemQuantity = document.getElementById('customItemQuantity').value;
+                const customItemPrice = document.getElementById('customItemPrice').value;
+                const customItemImage = document.getElementById('customItemImageData').value;
+                
+                if (customItemName) {
+                    addItemToList(customItemName, customItemPrice, customItemImage, customItemQuantity);
+                    document.getElementById('customItemName').value = '';
+                    document.getElementById('customItemQuantity').value = '1';
+                    document.getElementById('customItemPrice').value = '20';
+                    // Reset image to default
+                    currentCustomIcon = availableIcons[0].svg;
+                    document.getElementById('customItemImagePreview').innerHTML = currentCustomIcon;
+                    document.getElementById('customItemImageData').value = currentCustomIcon;
+                }
+            });
+            // Custom quantity controls
+            document.getElementById('decreaseCustomQty').addEventListener('click', function() {
+                const input = document.getElementById('customItemQuantity');
+                if (parseInt(input.value) > 1) {
+                    input.value = parseInt(input.value) - 1;
+                }
+            });
+            document.getElementById('increaseCustomQty').addEventListener('click', function() {
+                const input = document.getElementById('customItemQuantity');
+                input.value = parseInt(input.value) + 1;
+            });
+            // Function to update the state of the Add Image button
+            function updateAddImageButtonState() {
+                const addImageBtn = document.getElementById('addImageBtn');
+
+                if (galleryItemsArray.length >= 9) {
+                    addImageBtn.disabled = true;
+                    addImageBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    addImageBtn.classList.remove('hover:bg-blue-600');
+
+                    // Prevent duplicate toasts by checking if it's already shown (optional)
+                    if (!addImageBtn.dataset.toastShown) {
+                        showToast('info', 'Maximum Images Reached', 'You\'ve reached the maximum limit of 9 images.');
+                        addImageBtn.dataset.toastShown = 'true';
+                    }
+                } else {
+                    addImageBtn.disabled = false;
+                    addImageBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    addImageBtn.classList.add('hover:bg-blue-600');
+
+                    // Reset toast flag
+                    addImageBtn.dataset.toastShown = '';
+                }
+            }
+            
+            // Generate PDF and "send" email functionality
+            document.getElementById('generatePDF').addEventListener('click', function() {
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                if (!validateForm('submit')) {
+                    return;
+                }
+                
+                // In a real application, this would generate a PDF and send it via email
+                // For this demo, we'll just show a success message
+                document.getElementById('successModal').classList.remove('hidden');
+                
+                // Show success toast
+                showToast('success', 'Gallery Submitted', 'Your image gallery has been generated and sent successfully!');
+            });
+
+            // Close success modal
+            document.getElementById('closeModal').addEventListener('click', function() {
+                document.getElementById('successModal').classList.add('hidden');
+            });
+
+           
+            // Populate gallery image selection modal
+            function populateGalleryImageSelectionModal() {
+                    const galleryOptionsContainer = document.getElementById('galleryImageOptions');
+                    galleryOptionsContainer.innerHTML = '';
+
+                    // === Option 1: User's Own Image Upload ===
+                    const uploadButton = document.createElement('label');
+                    uploadButton.className = 'flex items-center justify-center p-2 border border-dashed border-gray-400 rounded-md hover:bg-gray-50 cursor-pointer h-32';
+                    
+                    uploadButton.innerHTML = `
+                        <span class="text-sm text-gray-600">Upload your own image</span>
+                        <input type="file" accept="image/*" class="hidden" id="customImageUpload">
+                    `;
+                    
+                    uploadButton.querySelector('input').addEventListener('change', function (event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                const uploadedSrc = e.target.result;
+                                document.getElementById('galleryImagePreview').innerHTML = `<img src="${uploadedSrc}" alt="User uploaded image" class="w-full h-full object-cover">`;
+                                document.getElementById('galleryImageData').value = uploadedSrc;
+                                document.getElementById('galleryImageSelectionModal').classList.add('hidden');
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+
+                    galleryOptionsContainer.appendChild(uploadButton);
+
+                    // === Option 2: Predefined Gallery Images ===
+                    // galleryImages.forEach(image => {
+                    //     const imageButton = document.createElement('button');
+                    //     imageButton.className = 'flex items-center justify-center p-2 border border-gray-200 rounded-md hover:bg-blue-50 transition duration-200 overflow-hidden h-32';
+                        
+                    //     const img = document.createElement('img');
+                    //     img.src = image.src;
+                    //     img.alt = image.alt;
+                    //     img.className = 'w-full h-full object-cover';
+                        
+                    //     imageButton.appendChild(img);
+                        
+                    //     imageButton.addEventListener('click', function () {
+                    //         currentGalleryImage = image.src;
+                    //         document.getElementById('galleryImagePreview').innerHTML = `<img src="${image.src}" alt="${image.alt}" class="w-full h-full object-cover">`;
+                    //         document.getElementById('galleryImageData').value = image.src;
+                    //         document.getElementById('galleryImageSelectionModal').classList.add('hidden');
+                    //     });
+                        
+                    //     galleryOptionsContainer.appendChild(imageButton);
+                    // });
+                }
+
+             // Populate predefined items modal
+             
+            function populatePredefinedItemsModal() {
+                const predefinedItemsList = document.getElementById('predefinedItemsList');
+                predefinedItemsList.innerHTML = '';
+                
+                predefinedItems.forEach(item => {
+                    const itemButton = document.createElement('button');
+                    itemButton.className = 'w-full text-left px-4 py-3 border border-gray-200 rounded-md hover:bg-red-50 transition duration-200 flex items-center';
+                    
+                    const itemImageDiv = document.createElement('div');
+                    itemImageDiv.className = 'item-image mr-3 flex-shrink-0';
+                    itemImageDiv.innerHTML = item.image;
+                    
+                    const itemInfoDiv = document.createElement('div');
+                    itemInfoDiv.className = 'flex-grow';
+                    
+                    const itemNameSpan = document.createElement('span');
+                    itemNameSpan.className = 'block font-medium';
+                    itemNameSpan.textContent = item.name;
+                    
+                    const itemPriceSpan = document.createElement('span');
+                    itemPriceSpan.className = 'text-gray-600 text-sm';
+                    itemPriceSpan.textContent = formatPrice(item.price);
+                    
+                    itemInfoDiv.appendChild(itemNameSpan);
+                    itemInfoDiv.appendChild(itemPriceSpan);
+                    
+                    const addIcon = document.createElement('span');
+                    addIcon.className = 'ml-2';
+                    addIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>';
+                    
+                    itemButton.appendChild(itemImageDiv);
+                    itemButton.appendChild(itemInfoDiv);
+                    itemButton.appendChild(addIcon);
+                    
+                    itemButton.addEventListener('click', function() {
+                        addItemToList(item.name, item.price, item.image);
+                        document.getElementById('addItemModal').classList.add('hidden');
+                    });
+                    
+                    predefinedItemsList.appendChild(itemButton);
+                });
+            }
+            
+            // Add gallery image button functionality
+            document.getElementById('addImageBtn').addEventListener('click', function() {
+                if (galleryItemsArray.length < 9) {
+                    // Reset form
+                    document.getElementById('galleryImageTitleSelect').value = '';
+                    document.getElementById('galleryImageTitleCustom').value = '';
+                    document.getElementById('galleryImageTitle').value = '';
+                    document.getElementById('galleryImageDesc').value = '';
+                    document.getElementById('galleryImageData').value = '';
+                    document.getElementById('galleryImagePreview').innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    `;
+                    currentGalleryImage = null;
+                    
+                    document.getElementById('addGalleryImageModal').classList.remove('hidden');
+                } else {
+                    showToast('warning', 'Maximum Images Reached', 'You can add a maximum of 9 images to the gallery.');
+                }
+            });
+            
+            // Select gallery image button functionality
+            document.getElementById('selectGalleryImage').addEventListener('click', function() {
+                populateGalleryImageSelectionModal();
+                document.getElementById('galleryImageSelectionModal').classList.remove('hidden');
+            });
+            
+            // Close gallery image selection modal
+            document.getElementById('cancelGalleryImageSelection').addEventListener('click', function() {
+                document.getElementById('galleryImageSelectionModal').classList.add('hidden');
+            });
+            
+             // Add predefined item button functionality
+            document.getElementById('addPredefinedItem').addEventListener('click', function() {
+                populatePredefinedItemsModal();
+                document.getElementById('addItemModal').classList.remove('hidden');
+            });
+            
+            // Close add item modal
+            document.getElementById('closeItemModal').addEventListener('click', function() {
+                document.getElementById('addItemModal').classList.add('hidden');
+            });
+            
+            // Add a custom item when pressing Enter in the input field
+            document.getElementById('customItemName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const customItemName = document.getElementById('customItemName').value.trim();
+                    const customItemQuantity = document.getElementById('customItemQuantity').value;
+                    const customItemPrice = document.getElementById('customItemPrice').value;
+                    const customItemImage = document.getElementById('customItemImageData').value;
+                    
+                    if (customItemName) {
+                        addItemToList(customItemName, customItemPrice, customItemImage, customItemQuantity);
+                        document.getElementById('customItemName').value = '';
+                        document.getElementById('customItemQuantity').value = '1';
+                        document.getElementById('customItemPrice').value = '20';
+                        // Reset image to default
+                        currentCustomIcon = availableIcons[0].svg;
+                        document.getElementById('customItemImagePreview').innerHTML = currentCustomIcon;
+                        document.getElementById('customItemImageData').value = currentCustomIcon;
+                    }
+                }
+            });
+
+            // Edit price functionality
+            document.getElementById('saveEditPrice').addEventListener('click', function() {
+                const itemId = document.getElementById('editItemId').value;
+                const newPrice = document.getElementById('editPriceInput').value;
+                
+                const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+                if (itemElement) {
+                    const priceElement = itemElement.querySelector('.item-price');
+                    if (priceElement) {
+                        priceElement.textContent = formatPrice(newPrice);
+                        priceElement.dataset.price = newPrice;
+                        updateTotals();
+                    }
+                }
+                
+                document.getElementById('editPriceModal').classList.add('hidden');
+            });
+            
+            document.getElementById('cancelEditPrice').addEventListener('click', function() {
+                document.getElementById('editPriceModal').classList.add('hidden');
+            });
+
+             // Populate image selection modal
+            function populateImageSelectionModal() {
+                const imageOptionsContainer = document.getElementById('imageOptions');
+                imageOptionsContainer.innerHTML = '';
+                
+                availableIcons.forEach(icon => {
+                    const iconButton = document.createElement('button');
+                    iconButton.className = 'flex items-center justify-center p-3 border border-gray-200 rounded-md hover:bg-red-50 transition duration-200';
+                    iconButton.innerHTML = icon.svg;
+                    
+                    iconButton.addEventListener('click', function() {
+                        currentCustomIcon = icon.svg;
+                        document.getElementById('customItemImagePreview').innerHTML = icon.svg;
+                        document.getElementById('customItemImageData').value = icon.svg;
+                        document.getElementById('imageSelectionModal').classList.add('hidden');
+                    });
+                    
+                    imageOptionsContainer.appendChild(iconButton);
+                });
+            }
+             // Custom item image button functionality
+            document.getElementById('customItemImageBtn').addEventListener('click', function() {
+                populateImageSelectionModal();
+                document.getElementById('imageSelectionModal').classList.remove('hidden');
+            });
+            
+
+            // Save gallery image button functionality
+            document.getElementById('saveGalleryImage').addEventListener('click', function() {
+                const imageData = document.getElementById('galleryImageData').value;
+                const title = getSelectedImageTitle().trim();
+                const description = document.getElementById('galleryImageDesc').value.trim();
+                
+                if (!imageData) {
+                    showToast('warning', 'Missing Image', 'Please select an image first.');
+                    return;
+                }
+                
+                 
+                
+                addGalleryImageToList(imageData, title, description);
+                document.getElementById('addGalleryImageModal').classList.add('hidden');
+            });
+            
+            // Cancel gallery image button functionality
+            document.getElementById('cancelGalleryImage').addEventListener('click', function() {
+                document.getElementById('addGalleryImageModal').classList.add('hidden');
+            });
+
+            // Preview PDF functionality
+            document.getElementById('previewPDF').addEventListener('click', function() {
+                if (!validateForm('preview')) {
+                    return;
+                }
+                const rawDescription = document.getElementById('galleryConc').value.trim();
+                const rawDescription2 = document.getElementById('galleryDescription').value.trim();
+                    function formatDescriptionForPDF(galleryConc) {
+                                // Match lines that start with numbers followed by a dot
+                                const formatted = galleryConc
+                                    .split('\n')
+                                    .map(line => {
+                                        if (/^\d+\.\s*/.test(line)) {
+                                            return `<br>${line.trim()}`;
+                                        }
+                                        return line.trim();
+                                    })
+                                    .join(' '); // join as one paragraph with <br> for numbered lines
+
+                                return formatted;
+                            }
+
+                const name = document.getElementById('name').value.trim() || 'Vinesh Naidu';
+                const email = document.getElementById('email').value.trim() || 'Admin@bbplumbing.co.za';
+                const galleryTitle = document.getElementById('galleryTitle').value.trim() || 'Work Data Assistance';
+                const galleryDescription = formatDescriptionForPDF(rawDescription2)|| 'A Conclusion based on the information on this building assesment project.'; 
+                const galleryConc = formatDescriptionForPDF(rawDescription)|| 'A Conclusion based on the information on this building assesment project.'; 
+                const requestId = 'BBP2043-' + Math.floor(100000 + Math.random() * 900000);
+
+                 // Get all items
+                const items = [];
+                const itemElements = document.querySelectorAll('#itemsList > div');
+                
+                itemElements.forEach(item => {
+                    const nameElement = item.querySelector('.item-name');
+                    const priceElement = item.querySelector('.item-price');
+                    const quantityInput = item.querySelector('input[type="number"]');
+                    
+                    if (nameElement && priceElement && quantityInput) {
+                        const name = nameElement.textContent;
+                        const price = parseFloat(priceElement.dataset.price);
+                        const quantity = parseInt(quantityInput.value);
+                        const total = price * quantity;
+                        
+                        items.push({
+                            name: name,
+                            price: price,
+                            quantity: quantity,
+                            total: total
+                        });
+                    }
+                });
+                 // Calculate totals
+                const subtotal = items.reduce((sum, item) => sum + item.total, 0);
+                const vat = subtotal * 0.15;
+                const total = subtotal + vat;
+                // Generate PDF preview content
+                const pdfContent = document.getElementById('pdfContent');
+                    
+                // Create PDF content
+                let pdfHTML = `
+                    <div class="header">
+                        <div class="header-logo">
+                           <img
+                                src="https://res.cloudinary.com/dkw9qeb5y/image/upload/v1747636336/vaan3o5qmdnqmgmiugmi.jpg"
+                                width="80"
+                                height="80"
+                                class="rounded-full"
+                            >
+                            <div>
+                                <h1>BB&P Report</h1>
+                                <p>Document generated on ${new Date().toLocaleDateString()}</p>
+                                <strong>Request ID:</strong> ${requestId}<br>
+                            </div>
+                        </div>
+                         <div>
+                            <strong>BB&P Material Request System</strong><br>
+                            Jhb - 010-222-0525<br>
+                            Cape Town - 0795383281<br>
+                            admin@bbplumbing.co.za<br>
+                            finance@bbplumbing.co.za<br>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h2>BlockBusters and Partners Information:</h2>
+                        <br>
+                        <p><strong>Title:</strong> ${galleryTitle}</p>
+                        <br>
+                        <p><strong>Description:</strong> ${galleryDescription}</p>
+                        <br>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h2>Contact Information</h2>
+                        <p><strong>Name:</strong> ${name}</p>
+                        <p><strong>Email:</strong> ${email}</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h2>Finding Image Information</h2>
+                        <div class="gallery-grid">
+                `;
+                
+                // Add gallery images
+                galleryItemsArray.forEach(item => {
+                    pdfHTML += `
+                        <div class="gallery-item">
+                            <img src="${item.image}" alt="${item.title}">
+                            <div class="gallery-info">
+                                <div class="gallery-title">${item.title}</div>
+                                <div class="gallery-desc">${item.description}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                pdfHTML += `
+                        
+                        </div>
+                           <div class="info-section">
+                            <h2>Recommendation: </h2>
+                            <p><strong>Title:</strong> ${galleryTitle}</p>
+                            <p>This report is supplied without prejudice.</p>
+                            <p><strong>We will quote to the following :</strong> ${galleryConc}</p>
+                        </div>
+                        <h2>Requested Items</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${items.map(item => `
+                                    <tr>
+                                        <td>${item.name}</td>
+                                        <td>${formatPrice(item.price)}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>${formatPrice(item.total)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        <div class="totals">
+                            <div><strong>Subtotal:</strong> ${formatPrice(subtotal)}</div>
+                            <div><strong>VAT (15%):</strong> ${formatPrice(vat)}</div>
+                            <div class="total-amount"><strong>Total:</strong> ${formatPrice(total)}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="footer">
+                        I trust you find this in order. 
+                        Thank you. <br>
+
+                        <!-- Full-width image inserted here -->
+                        <br>
+
+                        Kind regards <br>
+                        Vinesh  
+
+                        <p>Thank you for supporting our Proud Plumbers Policies!</p>
+                        <p>© ${new Date().getFullYear()} BB&amp;P (PTY). LTD
+                        <br>
+                        <br>
+                        <img src="https://res.cloudinary.com/dkw9qeb5y/image/upload/v1747635776/ullwtmblckm8mfvfktrz.jpg">
+
+                        </p>
+                    </div>
+                `;
+                
+                pdfContent.innerHTML = pdfHTML;
+                document.getElementById('pdfPreviewModal').classList.remove('hidden');
+                
+                // Show success toast
+                showToast('success', 'PDF Preview Ready', 'Your PDF preview has been generated successfully!');
+            });
+            
+            // Close PDF preview modal
+            document.getElementById('closePdfPreview').addEventListener('click', function() {
+                document.getElementById('pdfPreviewModal').classList.add('hidden');
+            });
+            
+            document.getElementById('closePdfPreviewBtn').addEventListener('click', function() {
+                document.getElementById('pdfPreviewModal').classList.add('hidden');
+            });
+            
+            // Download PDF functionality
+            document.getElementById('dowqnloadPDF').addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                
+                // Create a new PDF document (portrait, mm unit, A4 size)
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const pdfContent = document.getElementById('pdfContent');
+                
+                // Show loading toast
+                showToast('info', 'Generating PDF', 'Please wait while we generate your PDF...');
+                
+                // Use html2canvas to capture the PDF preview as an image
+                html2canvas(pdfContent, {
+                    scale: 2,  // Scale to improve resolution of captured content
+                    useCORS: true, // Ensure CORS for external images if any
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgWidth = 210; // A4 width in mm
+                    const pageHeight = 297; // A4 height in mm
+                    const imgHeight = (canvas.height * imgWidth) / canvas.width;  // Scale image height based on width
+                    let heightLeft = imgHeight;
+                    let position = 0;
+                    
+                    // Add the first image to the PDF
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                    
+                    // If the content is longer than one page, add new pages
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        doc.addPage();
+                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+                    
+                    // Save the PDF with a specific name
+                    doc.save('discoveryblockbusters.pdf');
+                    
+                    // Show success toast
+                    showToast('success', 'PDF Downloaded', 'Your PDF has been downloaded successfully!');
+                }).catch(error => {
+                    // Handle any error from html2canvas
+                    showToast('error', 'PDF Generation Failed', 'An error occurred while generating the PDF.');
+                    console.error('Error generating PDF:', error);
+                });
+            });
+
+            document.getElementById('downloadPDF').addEventListener('click', function () {
+                const { jsPDF } = window.jspdf;
+
+                // Create a new PDF document (portrait, mm unit, A4 size)
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const pdfContent = document.getElementById('pdfContent');
+
+                // Show loading toast
+                showToast('info', 'Generating PDF', 'Please wait while we generate your PDF...');
+
+                // Use jsPDF's html method to directly add the HTML content to the PDF
+                doc.html(pdfContent, {
+                    callback: function (doc) {
+                        // After rendering is complete, save the PDF
+                        doc.save('blockbusters-gallery.pdf');
+
+                        // Show success toast
+                        showToast('success', 'PDF Downloaded', 'Your PDF has been downloaded successfully!');
+                    },
+                    x: 10, // X position for the content
+                    y: 10, // Y position for the content
+                    width: 180, // Max width of content to fit (in mm)
+                    windowWidth: window.innerWidth, // Adjust content width to fit the window
+                    autoPaging: true, // Auto paginating content across pages
+                });
+                
+            }).catch(error => {
+                // Handle any error
+                showToast('error', 'PDF Generation Failed', 'An error occurred while generating the PDF.');
+                console.error('Error generating PDF:', error);
+            });
+
+
+            // Function to show a toast notification (for demonstration purposes)
+            function showToast(type, title, message) {
+                const toast = document.createElement('div');
+                toast.classList.add('toast', `toast-${type}`);
+                toast.innerHTML = `
+                    <strong>${title}</strong><br>
+                    ${message}
+                `;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            } 
+
+
+            // Show initial toast to guide the user
+            setTimeout(() => {
+                showToast('info', 'Welcome!', 'Start by adding at least 2 images to your gallery.');
+            }, 1000);
         });
-  
 
-        
-        saveButton.addEventListener('click', function (el) {
-                // Get the HTML body and canvas elements
-          const body = document.querySelector("body");
-          const canvas = document.querySelector("canvas"); 
-          // Create a new jsPDF instance
-          const doc = new jsPDF(); 
-          // Add the HTML body as an image to the PDF
-          const imgData = canvas.toDataURL("image/png");
-          doc.addImage(imgData, "PNG", 10, 10, 180, 250); 
-          // Save the PDF
-          doc.save("download.pdf");
-            link.click();
-            link.delete;
-        }); 
-
-        var element = $("#imageDIV"); // global variable
-            var getCanvas; // global variable
-            $('document').ready(function(){
-            html2canvas(element, {
-                onrendered: function (canvas) {
-                $("#previewImage").append(canvas);
-                getCanvas = canvas;
-                  }
-               });
-            });
-
-            $("#saveButton").on('click', function () {
-              
-            var imgageData = getCanvas.toDataURL("image/png");
-            // Now browser starts downloading it instead of just showing it
-            var newData = imageData.replace(/^data:image\/png/, "data:application/octet-stream");
-            $("#download").attr("download", "image.png").attr("href", newData);
-            });
-  
-</script>
- 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js"></script>
-
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9417922253e1738a',t:'MTc0NzUzMTYzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
