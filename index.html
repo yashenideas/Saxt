@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vinesh Claims Creator</title>
+    <title>NPO Image Gallery Creator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -269,7 +269,7 @@
 
         <main class="container mx-auto px-4 py-8 flex-grow">
             <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
-                <!-- Vinesh Claims Creator Section -->
+                <!-- Image Gallery Section -->
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Overview Report</h3>
                     <p class="text-gray-600 mb-4">Add between 2-9 images with descriptions that will appear in a mosaic layout in your PDF.</p>
@@ -606,10 +606,10 @@
                 const predefinedItems = [ 
                 { name: "Start Up", price: 973, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' },
                 { name: "Additonal labour ", price: 580, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>' },  
-                { name: "Camera inspection", price: 1500, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
+                { name: "Leak Detection", price: 1500, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
                 { name: "Jetting first hour", price: 2950, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>' },
                 { name: "Unblocking with roto machine", price: 1500, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>' },
-                { name: "Drain camera inspection", price: 1500, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>' },
+                { name: "Drain camera Inspection", price: 1500, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>' },
                 // { name: "Excvations between 1m and 2m deep", price: 100, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
                 // { name: "Excvations between 1m deep", price: 30, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
                 // { name: "Filling to trenches, compacted 1m-2m", price: 50, image: '<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4M20 12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v4a2 2 0 002 2M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6" /></svg>' },
@@ -1399,7 +1399,7 @@
                             </div>
                         </div>
                          <div>
-                            <strong>BB&P Material Request System</strong><br>
+                            <strong>BB&P Report System</strong><br>
                             Jhb - 010-222-0525<br>
                             Cape Town - 0795383281<br>
                             admin@bbplumbing.co.za<br>
@@ -1478,15 +1478,17 @@
                     </div>
                     
                     <div class="footer">
-                        I trust you find this in order. 
-                        Thank you. <br>
+                        <div style="text-align: left;">
+                            Please be aware that the observations, conclusions, and recommendations presented in this report are based on a visual inspection. I cannot accept any liability for latent defects that could not be reasonably detected during this inspection.
+                            <br>
+                            I trust you find this in order. 
+                            Thank you. <br><br>
 
-                        <!-- Full-width image inserted here -->
-                        <br>
-
-                        Kind regards <br>
-                        Vinesh  
-
+                            Kind regards <br>
+                            Vinesh Naidu 
+                            CEO
+                            (BLOCKBUSTERS AND PARTNERS PTY.Ltd)
+                        </div>
                         <p>Thank you for supporting our Proud Plumbers Policies!</p>
                         <p>© ${new Date().getFullYear()} BB&amp;P (PTY). LTD
                         <br>
