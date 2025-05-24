@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NPO Image Gallery Creator</title>
+    <title>BB P ORDER 66</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -282,6 +282,41 @@
                             Add Image
                         </button>
                         <p class="text-sm text-gray-500 mt-2">You can add between 2-9 images.</p>
+
+                        <div class="mb-8">
+                            <h3 class="text-lg font-medium text-gray-800 mb-3">Add Clients Info:</h3>
+                            <div class="flex flex-wrap items-center gap-3">
+                                 
+                                <div class="flex items-center">
+                                    <div class="item-image mr-2" id="customItemImagePreview">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <button id="ClaimReferencwe" class="text-sm text-red-600 hover:text-red-800 mr-2">Claim Reference:</button>
+                                    <input type="text" id="ClaimReference" placeholder="Item name" maxlength="30" class="w-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="item-image mr-2" id="customItemImagePreview">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <button id="ClaimwName" class="text-sm text-red-600 hover:text-red-800 mr-2">Claim Name:</button>
+                                    <input type="text" id="ClaimName" placeholder="Item name" maxlength="30" class="w-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="item-image mr-2" id="customItemImagePreview">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <button id="ClaimAdwdress" class="text-sm text-red-600 hover:text-red-800 mr-2">Claim Address :</button>
+                                    <input type="text" id="ClaimAddress" placeholder="Item name" maxlength="30" class="w-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500">
+                                </div>
+                                 
+                             </div>
+                        </div>
                     </div>
                     
                     <div id="imageGalleryList" class="space-y-4">
@@ -1346,8 +1381,12 @@
                             }
 
                 const name = document.getElementById('name').value.trim() || 'Vinesh Naidu';
-                const email = document.getElementById('email').value.trim() || 'Admin@bbplumbing.co.za';
+                const email = document.getElementById('email').value.trim() || 'finance@bbplumbing.co.za';
                 const galleryTitle = document.getElementById('galleryTitle').value.trim() || 'Work Data Assistance';
+                const ClaimAddress = document.getElementById('ClaimAddress').value.trim() || 'South Africa';
+                const ClaimName = document.getElementById('ClaimName').value.trim() || 'PVT';
+                const ClaimReference = document.getElementById('ClaimReference').value.trim() || 'VRT2025';            
+
                 const galleryDescription = formatDescriptionForPDF(rawDescription2)|| 'A Conclusion based on the information on this building assesment project.'; 
                 const galleryConc = formatDescriptionForPDF(rawDescription)|| 'A Conclusion based on the information on this building assesment project.'; 
                 const requestId = 'BBP2043-' + Math.floor(100000 + Math.random() * 900000);
@@ -1402,28 +1441,29 @@
                             <strong>BB&P Report System</strong><br>
                             Jhb - 010-222-0525<br>
                             Cape Town - 0795383281<br>
-                            admin@bbplumbing.co.za<br>
+                            vinesh@bbplumbing.co.za<br>
                             finance@bbplumbing.co.za<br>
                         </div>
                     </div>
                     
                     <div class="info-section">
-                        <h2>BlockBusters and Partners Information:</h2>
+                        <h2>Clients Information:</h2>
                         <br>
-                        <p><strong>Title:</strong> ${galleryTitle}</p>
+                        <p><strong>Claim:</strong> ${ClaimReference}</p>
+                        <p><strong>Client:</strong> ${ClaimName}</p>
+                        <p><strong>Address:</strong> ${ClaimAddress}</p>
                         <br>
-                        <p><strong>Description:</strong> ${galleryDescription}</p>
-                        <br>
+                        <p> ${galleryDescription}</p>
                     </div>
                     
                     <div class="info-section">
-                        <h2>Contact Information</h2>
-                        <p><strong>Name:</strong> ${name}</p>
-                        <p><strong>Email:</strong> ${email}</p>
+                        <h2>BlockBusters and Partners Report Information</h2>
+                        <p><strong>Staff Name:</strong> ${name}</p>
+                        <p><strong>Staff Contact:</strong> ${email}</p>
                     </div>
                     
                     <div class="info-section">
-                        <h2>Finding Image Information</h2>
+                        <h2>Finding Images Information</h2>
                         <div class="gallery-grid">
                 `;
                 
@@ -1449,7 +1489,7 @@
                             <p>This report is supplied without prejudice.</p>
                             <p><strong>We will quote to the following :</strong> ${galleryConc}</p>
                         </div>
-                        <h2>Requested Items</h2>
+                        <h2>Quoted Items</h2>
                         <table>
                             <thead>
                                 <tr>
@@ -1486,11 +1526,12 @@
 
                             Kind regards <br>
                             Vinesh Naidu 
-                            
-                            (BLOCKBUSTERS AND PARTNERS PTY.Ltd)
+                            <br>
+                            <br>
+                            <br>
                         </div>
-                        <p>Thank you for supporting our Proud Plumbers Policies!</p>
-                        <p>© ${new Date().getFullYear()} BB&amp;P (PTY). LTD
+                        <p>Thank you for supporting our Standard Plumbing Procedures.</p>
+                        <p>BLOCKBUSTERS AND PARTNERS © ${new Date().getFullYear()} (PTY). LTD
                         <br>
                         <br>
                         <img src="https://res.cloudinary.com/dkw9qeb5y/image/upload/v1747635776/ullwtmblckm8mfvfktrz.jpg">
@@ -1516,51 +1557,79 @@
             });
             
             // Download PDF functionality
-            document.getElementById('dowqnloadPDF').addEventListener('click', function() {
+            document.getElementById('dowqnloadPDF').addEventListener('click', function () {
                 const { jsPDF } = window.jspdf;
-                
-                // Create a new PDF document (portrait, mm unit, A4 size)
+
                 const doc = new jsPDF('p', 'mm', 'a4');
                 const pdfContent = document.getElementById('pdfContent');
-                
-                // Show loading toast
+
                 showToast('info', 'Generating PDF', 'Please wait while we generate your PDF...');
-                
-                // Use html2canvas to capture the PDF preview as an image
+
                 html2canvas(pdfContent, {
-                    scale: 2,  // Scale to improve resolution of captured content
-                    useCORS: true, // Ensure CORS for external images if any
-                }).then(canvas => {
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgWidth = 210; // A4 width in mm
-                    const pageHeight = 297; // A4 height in mm
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width;  // Scale image height based on width
-                    let heightLeft = imgHeight;
-                    let position = 0;
-                    
-                    // Add the first image to the PDF
-                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                    
-                    // If the content is longer than one page, add new pages
-                    while (heightLeft >= 0) {
-                        position = heightLeft - imgHeight;
-                        doc.addPage();
-                        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        heightLeft -= pageHeight;
+                    scale: 2,
+                    useCORS: true,
+                }).then(originalCanvas => {
+                    const imgWidth = 210;               // A4 width in mm
+                    const pageHeight = 297;             // A4 height in mm
+                    const spacing = 10;                 // Margin (top/bottom)
+                    const scale = imgWidth / originalCanvas.width;
+
+                    const ctx = originalCanvas.getContext('2d');
+                    const pageCanvas = document.createElement('canvas');
+                    const pageCtx = pageCanvas.getContext('2d');
+
+                    // Page content height in pixels (canvas units)
+                    const firstPageHeightPx = ((pageHeight - spacing) / scale);
+                    const otherPageHeightPx = ((pageHeight - spacing * 2) / scale);
+
+                    const pages = [];
+                    let remainingHeight = originalCanvas.height;
+                    let offsetY = 0;
+
+                    // First page (no top spacing, but has bottom spacing)
+                    pages.push({ y: offsetY, height: firstPageHeightPx, topMargin: 0 });
+                    offsetY += firstPageHeightPx;
+                    remainingHeight -= firstPageHeightPx;
+
+                    // Remaining pages (with top and bottom spacing)
+                    while (remainingHeight > 0) {
+                        let height = Math.min(remainingHeight, otherPageHeightPx);
+                        pages.push({ y: offsetY, height, topMargin: spacing });
+                        offsetY += height;
+                        remainingHeight -= height;
                     }
-                    
-                    // Save the PDF with a specific name
+
+                    pages.forEach((page, index) => {
+                        pageCanvas.width = originalCanvas.width;
+                        pageCanvas.height = page.height;
+                        pageCtx.clearRect(0, 0, pageCanvas.width, pageCanvas.height);
+                        pageCtx.drawImage(
+                            originalCanvas,
+                            0, page.y, pageCanvas.width, page.height, // source
+                            0, 0, pageCanvas.width, page.height       // destination
+                        );
+
+                        const imgData = pageCanvas.toDataURL('image/png');
+
+                        if (index !== 0) doc.addPage();
+
+                        const positionY = page.topMargin;
+                        const displayHeight = (page.height * imgWidth) / originalCanvas.width;
+
+                        doc.addImage(imgData, 'PNG', 0, positionY, imgWidth, displayHeight);
+                    });
+
                     doc.save('discoveryblockbusters.pdf');
-                    
-                    // Show success toast
                     showToast('success', 'PDF Downloaded', 'Your PDF has been downloaded successfully!');
                 }).catch(error => {
-                    // Handle any error from html2canvas
                     showToast('error', 'PDF Generation Failed', 'An error occurred while generating the PDF.');
                     console.error('Error generating PDF:', error);
                 });
             });
+
+
+
+
 
             document.getElementById('downloadPDF').addEventListener('click', function () {
                 const { jsPDF } = window.jspdf;
@@ -1576,7 +1645,7 @@
                 doc.html(pdfContent, {
                     callback: function (doc) {
                         // After rendering is complete, save the PDF
-                        doc.save('blockbusters-gallery.pdf');
+                        doc.save('blockbusters-data.pdf');
 
                         // Show success toast
                         showToast('success', 'PDF Downloaded', 'Your PDF has been downloaded successfully!');
